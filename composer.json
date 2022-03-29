@@ -1,0 +1,17 @@
+{
+    "name": "dengpju/php-scanner",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Dengpju\\PhpScanner\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "dengpju"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
