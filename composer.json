@@ -1,15 +1,12 @@
 {
     "name": "dengpju/php-scanner",
+    "description": "scan controller nodes",
     "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Dengpju\\PhpScanner\\": "src/"
-        }
-    },
     "authors": [
         {
-            "name": "dengpju"
+            "name": "dengpju",
+            "email": "dengpju@163.com"
         }
     ],
     "minimum-stability": "stable",
