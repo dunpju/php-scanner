@@ -4,7 +4,7 @@
 namespace Dengpju\PhpScanner;
 
 
-class Config
+class Configure
 {
     /**
      * 项目名称

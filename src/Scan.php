@@ -4,12 +4,13 @@
 namespace Dengpju\PhpScanner;
 
 
+use Exception;
 use ReflectionException;
 
-class Scanner
+class Scan
 {
     /**
-     * @var Config
+     * @var Configure
      */
     protected $config;
 
@@ -19,7 +20,7 @@ class Scanner
      */
     protected $nodes = [];
 
-    public function __construct(Config $config)
+    public function __construct(Configure $config)
     {
         $this->config = $config;
     }
@@ -56,8 +57,16 @@ class Scanner
      */
     public function scaner()
     {
+        if (!$this->config->projectName) {
+            throw new Exception("projectName property Can't be empty");
+        }
+        if (!$this->config->scanNamespace) {
+            throw new Exception("scanNamespace property Can't be empty");
+        }
+        if (is_dir($this->config->scanRoot)) {
+            throw new Exception("directory does not exist");
+        }
         $phpfiles = $this->files($this->config->scanRoot);
-        print_r($phpfiles);
         foreach ($phpfiles as $php) {
             if (preg_match("/\.php$/", $php)) {
                 require_once($php);
@@ -84,46 +93,22 @@ class Scanner
                 $methods = $refClass->getMethods();
                 foreach ($methods as $method) {
                     if ($method->class == $class) {
-                        $m['privilege_action_sn'] = $method->name;
-                        $m['project_name'] = $method->name;
-                        $m['method'] = $method->name;
-                        $m['name'] = $method->name;
-                        $m['class'] = $method->class;
-                        $m['uni_md5'] = $this->action($m['project_name'], $m['method'], $m['name'], $m['class']);
-                        $m['title'] = $this->parse($method->getDocComment());
-                        $m['desc'] = "";
-                        $this->nodes[$m['uni_md5']] = $m;
+                        $m = [];
+                        $action = new Action();
+                        $action->privilege_action_sn = "pas" . Util::randomNumbser(29);
+                        $action->project_name = $this->config->projectName;
+                        $action->name = $method->name;
+                        $action->class = $method->class;
+                        $action->route = $method->class . '@' . $method->name;
+                        $action->uni_md5 = Util::md5($action->project_name, $action->class, $action->name);
+                        $action->title = Util::parse($method->getDocComment());
+                        $action->desc = "";
+                        $this->nodes[$action->uni_md5] = $action;
                     }
                 }
             }
         }
-        print_r($this->nodes);
     }
 
-    /**
-     * @param string $project
-     * @param string $method
-     * @param string $class
-     * @param string $name
-     * @return string
-     */
-    protected function action(string $project, string $method, string $class, string $name): string
-    {
-        return md5($project . '+' . $method . '+' . $class . '@' . $name);
-    }
 
-    /**
-     * @param string $docComment
-     * @return string
-     */
-    protected function parse(string $docComment): string
-    {
-        preg_match_all("/(?<=(\@Message\(\")).*?(?=(\"\)))/", $docComment, $doc);
-        if ($doc) {
-            if (isset($doc[0]) && isset($doc[0][0]) && !empty($doc[0][0])) {
-                return trim($doc[0][0], '"');
-            }
-        }
-        return "";
-    }
 }

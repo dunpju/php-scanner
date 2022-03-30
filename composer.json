@@ -11,7 +11,9 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7.2.0"
+    "php": ">=7.2.0",
+    "ext-bcmath": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
