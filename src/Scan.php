@@ -20,9 +20,23 @@ class Scan
      */
     protected $nodes = [];
 
+    /**
+     * Scan constructor.
+     * @param Configure $config
+     * @throws Exception
+     */
     public function __construct(Configure $config)
     {
         $this->config = $config;
+        if (!$this->config->projectName) {
+            throw new Exception("projectName property Can't be empty");
+        }
+        if (!$this->config->scanNamespace) {
+            throw new Exception("scanNamespace property Can't be empty");
+        }
+        if (!is_dir($this->config->scanRoot)) {
+            throw new Exception("directory does not exist");
+        }
     }
 
     /**
@@ -58,15 +72,6 @@ class Scan
      */
     public function scaner()
     {
-        if (!$this->config->projectName) {
-            throw new Exception("projectName property Can't be empty");
-        }
-        if (!$this->config->scanNamespace) {
-            throw new Exception("scanNamespace property Can't be empty");
-        }
-        if (is_dir($this->config->scanRoot)) {
-            throw new Exception("directory does not exist");
-        }
         $phpfiles = $this->files($this->config->scanRoot);
         foreach ($phpfiles as $php) {
             if (preg_match("/\.php$/", $php)) {
