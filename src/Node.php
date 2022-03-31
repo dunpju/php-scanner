@@ -7,7 +7,7 @@ namespace Dengpju\PhpScanner;
 use Exception;
 use ReflectionException;
 
-class Scan
+class Node
 {
     /**
      * @var Configure
@@ -101,7 +101,7 @@ class Scan
                     if ($method->class == $class) {
                         $m = [];
                         $action = new Action();
-                        $action->privilege_action_sn = "pas" . Util::randomNumbser(29);
+                        $action->privilege_action_sn = "pas" . Util::number(29);
                         $action->project_name = $this->config->projectName;
                         $action->name = $method->name;
                         $action->class = $method->class;
@@ -115,6 +115,4 @@ class Scan
             }
         }
     }
-
-
 }

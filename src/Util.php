@@ -56,4 +56,28 @@ class Util
         $random = substr((string)$random, 0, $length);
         return $random;
     }
+
+    /**
+     * @param int $length
+     * @param string $alphabet
+     * @return bool|string
+     */
+    public static function character($length = 6, $alphabet = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789')
+    {
+        mt_srand();
+        if ($length >= strlen($alphabet)) {
+            $rate = intval($length / strlen($alphabet)) + 1;
+            $alphabet = str_repeat($alphabet, $rate);
+        }
+        return substr(str_shuffle($alphabet), 0, $length);
+    }
+
+    /**
+     * @param int $length
+     * @return bool|string
+     */
+    public static function number($length = 6)
+    {
+        return static::character($length, '0123456789');
+    }
 }

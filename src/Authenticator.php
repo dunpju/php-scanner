@@ -28,7 +28,6 @@ class Authenticator
      */
     protected $uniMd5;
 
-
     /**
      * Auth constructor.
      * @param Configure $config
