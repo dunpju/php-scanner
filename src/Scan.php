@@ -53,6 +53,7 @@ class Scan
 
     /**
      * 扫描
+     * @throws Exception
      * @throws ReflectionException
      */
     public function scaner()
