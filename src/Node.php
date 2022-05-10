@@ -28,13 +28,13 @@ class Node
     public function __construct(Configure $config)
     {
         $this->config = $config;
-        if (!$this->config->projectName) {
+        if (!$this->config->getProjectName()) {
             throw new Exception("projectName property Can't be empty");
         }
-        if (!$this->config->scanNamespace) {
+        if (!$this->config->getScanNamespace()) {
             throw new Exception("scanNamespace property Can't be empty");
         }
-        if (!is_dir($this->config->scanRoot)) {
+        if (!is_dir($this->config->getScanRoot())) {
             throw new Exception("directory does not exist");
         }
     }
@@ -72,7 +72,7 @@ class Node
      */
     public function scaner()
     {
-        $phpfiles = $this->files($this->config->scanRoot);
+        $phpfiles = $this->files($this->config->getScanRoot());
         foreach ($phpfiles as $php) {
             if (preg_match("/\.php$/", $php)) {
                 require_once($php);
@@ -80,11 +80,11 @@ class Node
         }
         $classes = get_declared_classes();
         foreach ($classes as $class) {
-            if (in_array($class, $this->config->excludeNamespace)) {
+            if (in_array($class, $this->config->getExcludeNamespace())) {
                 continue;
             }
             $isSkip = false;
-            foreach ($this->config->excludeNamespace as $excludeNamespace) {
+            foreach ($this->config->getExcludeNamespace() as $excludeNamespace) {
                 $excludeNamespace = rtrim($excludeNamespace, "*");
                 if (0 === strpos($class, $excludeNamespace)) {
                     $isSkip = true;
@@ -94,15 +94,14 @@ class Node
             if ($isSkip) {
                 continue;
             }
-            if (strstr($class, $this->config->scanNamespace)) {
+            if (strstr($class, $this->config->getScanNamespace())) {
                 $refClass = new \ReflectionClass($class);
                 $methods = $refClass->getMethods();
                 foreach ($methods as $method) {
                     if ($method->class == $class) {
-                        $m = [];
                         $action = new Action();
                         $action->privilege_action_sn = "pas" . Util::number(29);
-                        $action->project_name = $this->config->projectName;
+                        $action->project_name = $this->config->getProjectName();
                         $action->name = $method->name;
                         $action->class = $method->class;
                         $action->route = $method->class . '@' . $method->name;
