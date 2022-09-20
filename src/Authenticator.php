@@ -36,7 +36,7 @@ class Authenticator
      */
     public function __construct(Configure $config, IStorage $storage)
     {
-        if (is_dir($config->projectName)) {
+        if (is_dir($config->getProjectName())) {
             throw new Exception("projectName property Can't be empty");
         }
         $this->config = $config;
@@ -59,7 +59,7 @@ class Authenticator
      */
     public function isAuth(string $class, string $name): bool
     {
-        $this->uniMd5 = Util::md5($this->config->projectName, $class, $name);
+        $this->uniMd5 = Util::md5($this->config->getProjectName(), $class, $name);
         return $this->storage->exist($this->uniMd5);
     }
 
